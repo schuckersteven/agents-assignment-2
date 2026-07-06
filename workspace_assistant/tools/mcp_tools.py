@@ -10,6 +10,7 @@ Optional: File-based configuration from config/mcp_servers.json
 import json
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
 from google.adk.tools.mcp_tool import McpToolset
 from google.adk.tools.mcp_tool.mcp_session_manager import StdioConnectionParams
@@ -24,25 +25,21 @@ MCP_CONFIG_PATH = Path(__file__).parent.parent / "config" / "mcp_servers.json"
 # =============================================================================
 # REQUIRED: Direct Configuration
 # =============================================================================
-# TODO: Implement get_github_mcp_toolset()
-# Configure the GitHub MCP server directly in Python code.
-#
-# Example structure:
-#
-# def get_github_mcp_toolset() -> McpToolset:
-#     token = os.getenv("GITHUB_PERSONAL_ACCESS_TOKEN")
-#     if not token:
-#         raise ValueError("GITHUB_PERSONAL_ACCESS_TOKEN not set in .env")
-#
-#     server_params = StdioServerParameters(
-#         command="npx",
-#         args=["-y", "@modelcontextprotocol/server-github"],
-#         env={"GITHUB_PERSONAL_ACCESS_TOKEN": token}
-#     )
-#
-#     return McpToolset(
-#         connection_params=StdioConnectionParams(server_params=server_params)
-#     )
+def get_github_mcp_toolset() -> McpToolset:
+    """Create a GitHub MCP toolset from the environment directly."""
+    token = os.getenv("GITHUB_PERSONAL_ACCESS_TOKEN")
+    if not token:
+        raise ValueError("GITHUB_PERSONAL_ACCESS_TOKEN not set in .env")
+
+    server_params = StdioServerParameters(
+        command="npx",
+        args=["-y", "@modelcontextprotocol/server-github"],
+        env={"GITHUB_PERSONAL_ACCESS_TOKEN": token},
+    )
+
+    return McpToolset(
+        connection_params=StdioConnectionParams(server_params=server_params)
+    )
 
 
 # =============================================================================
